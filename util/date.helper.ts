@@ -7,3 +7,14 @@ export const stringToDate = (dateString: string): Date => {
 
   return date;
 };
+
+export const earlier = (date1: Date, date2?: Date) => {
+  return date1.getTime() < (date2 ?? new Date()).getTime();
+};
+
+export const addDays = (current: Date, numberOfDaysToAdd: number) => {
+  const newDate = new Date(current);
+  newDate.setDate(current.getDate() + numberOfDaysToAdd);
+
+  return newDate;
+};
