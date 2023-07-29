@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start:windows": "ts-node index"
+    "start:windows": "ts-node index --since 1/1/1900",
+    "start": "npm run start:windows"
   },
   "author": "",
   "license": "ISC",
