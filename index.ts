@@ -6,7 +6,7 @@ import { stringToDate } from './util/date.helper';
 // Boostrapping
 const printer: IPrinter = new Printer();
 const promptFactory: IPromptFactory = new PromptFactory();
-const numerology = new BirthGraphApp();
+const numerology = new BirthGraphApp(printer);
 
 // App Start
 const startTimeParamName = 'since';

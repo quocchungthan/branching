@@ -1,3 +1,4 @@
+import { IPrinter } from '../commands/printer.factory';
 import { addDays, earlier } from '../util/date.helper';
 
 export interface BirthGraphProbability {
@@ -9,6 +10,8 @@ export interface BirthGraphProbability {
 export class BirthGraphApp {
   private _startTime: Date;
   private _currentStatistic: BirthGraphProbability[];
+
+  constructor(private _printer: IPrinter) {}
 
   since(startTime: Date) {
     this._startTime = startTime;
@@ -22,7 +25,6 @@ export class BirthGraphApp {
 
     while (earlier(iterater)) {
       const identifier = this._getIdentifierAccordingToNumerology(iterater);
-
       if (!tempDictionary[identifier]) {
         tempDictionary[identifier] = { identifier, distinceBirthDateCount: 0 };
       }
@@ -36,7 +38,7 @@ export class BirthGraphApp {
   }
 
   print(): void {
-    console.log(this._currentStatistic);
+    this._printer.printTable(this._currentStatistic);
   }
 
   private _getIdentifierAccordingToNumerology(date: Date): string {
