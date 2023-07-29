@@ -1,9 +1,11 @@
 import { BirthGraphApp } from './application/brithdaygrapp.app';
-import { PromptFactory } from './commands/prompt.factory';
+import { IPrinter, Printer } from './commands/printer.factory';
+import { IPromptFactory, PromptFactory } from './commands/prompt.factory';
 import { stringToDate } from './util/date.helper';
 
 // Boostrapping
-const promptFactory = new PromptFactory();
+const printer: IPrinter = new Printer();
+const promptFactory: IPromptFactory = new PromptFactory();
 const numerology = new BirthGraphApp();
 
 // App Start
