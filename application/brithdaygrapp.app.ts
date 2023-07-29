@@ -26,7 +26,11 @@ export class BirthGraphApp {
     while (earlier(iterater)) {
       const identifier = this._getIdentifierAccordingToNumerology(iterater);
       if (!tempDictionary[identifier]) {
-        tempDictionary[identifier] = { identifier, distinceBirthDateCount: 0 };
+        tempDictionary[identifier] = {
+          identifier,
+          distinceBirthDateCount: 0,
+          alivePersonCount: NaN,
+        };
       }
 
       tempDictionary[identifier].distinceBirthDateCount++;
@@ -38,13 +42,23 @@ export class BirthGraphApp {
   }
 
   print(): void {
-    this._printer.printTable(this._currentStatistic);
+    const sum = this._currentStatistic.reduce(
+      (acc, curr) => acc + curr.distinceBirthDateCount,
+      0
+    );
+
+    this._printer.printTable(
+      this._currentStatistic
+        .map((x) => ({ ...x, sum }))
+        .sort((d1, d2) => d2.distinceBirthDateCount - d1.distinceBirthDateCount)
+        .slice(0, 100)
+    );
   }
 
   private _getIdentifierAccordingToNumerology(date: Date): string {
     const stringNothing = '';
-    const day = date.getDay();
-    const month = date.getMonth();
+    const day = date.getDate();
+    const month = date.getMonth() + 1;
     const year = date.getFullYear();
 
     const digits = stringNothing + day + month + year;
