@@ -2,9 +2,13 @@ import express from 'express';
 import path from 'path';
 import { WidgetConfiguration } from './models/WidgetConfiguration';
 import { IPromptFactory, PromptFactory } from '../commands/prompt.factory';
+import { IStorageClient } from './data/abstract.client';
+import { FileStorage } from './data/filestorage.client';
+import { Submission } from './models/Submission';
 
 // Bootstrapping
 const prompt: IPromptFactory = new PromptFactory();
+const storage: IStorageClient = new FileStorage();
 
 // App Start
 let app = express();
@@ -29,7 +33,28 @@ const widgetsConfiguration: WidgetConfiguration[] = [
 
 widgetsConfiguration.forEach(element => {
     app.get(`${widgetPrefix}/${element.identifier}`, (req, res) => {
-        res.render(element.viewName);
+        console.log(req.originalUrl);
+        storage.get(req.originalUrl).then(data => {
+            console.log(data);
+            res.render(element.viewName);
+        });
+    });
+
+    app.post(`${widgetPrefix}/${element.identifier}`, (req, res) => {
+        console.log(req.originalUrl);
+        console.log(req.originalUrl);
+        
+        const submission: Submission = {
+            targetUrl: 'https://localhost:1212/trangchu',
+            originIPAddress: '192.168.78.24',
+            timeStamps: new Date().toISOString()
+        };
+
+        storage.insert(submission)
+            .then((newIdentifier) => {
+                console.log(newIdentifier);
+                res.render(element.viewName);
+            });
     });
 });
 
