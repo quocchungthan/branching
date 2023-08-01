@@ -30,14 +30,16 @@ export class FileStorage implements IStorageClient {
     async get(targetUrl: string): Promise<Submission[]> {
         const fileNamePattern = this._fileNameFromUrl(targetUrl) + '_' + '*' + '.json';
         const submissions: Submission[] = [];
-        const paths = await glob(path.join(this._directory, fileNamePattern));
-
+        const paths = await glob('**/submissions/' + fileNamePattern);
         for (const p of paths) {
             const fileData = fs.readFileSync(p, this._fileCharset);
 
             const parsedData = JSON.parse(fileData);
-            paths.push(parsedData);
+            console.log(parsedData);
+            submissions.push(parsedData);
         }
+
+        console.log(submissions);
 
         return submissions;
     }

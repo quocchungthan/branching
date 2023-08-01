@@ -1,4 +1,3 @@
-- var currentLike = 0;
 doctype html
 html
   head
@@ -45,9 +44,9 @@ html
     .outer-container
       // Centering the content vertically and horizontally
       .center-container
-        // Your like button or any other content goes here
-        button.like-button 
-            i.fa.fa-thumbs-up
-            span.pl-3 Like !{currentLike}
+            form(action="/widgets/likes", method="post")
+                button.like-button(onclick="myButtonClick()") 
+                    i.fa.fa-thumbs-up
+                    span.pl-3 Like #{numerOfLikes}
 
 

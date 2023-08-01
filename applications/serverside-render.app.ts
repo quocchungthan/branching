@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Request } from 'express';
 import path from 'path';
 import { WidgetConfiguration } from './models/WidgetConfiguration';
 import { IPromptFactory, PromptFactory } from '../commands/prompt.factory';
@@ -33,30 +33,38 @@ const widgetsConfiguration: WidgetConfiguration[] = [
 
 widgetsConfiguration.forEach(element => {
     app.get(`${widgetPrefix}/${element.identifier}`, (req, res) => {
-        console.log(req.originalUrl);
-        storage.get(req.originalUrl).then(data => {
+        console.log(getTargetUrl(req));
+        storage.get(getTargetUrl(req)).then(data => {
             console.log(data);
-            res.render(element.viewName);
+            console.log(data.length);
+            res.render(element.viewName, { numerOfLikes: data.length });
         });
     });
 
     app.post(`${widgetPrefix}/${element.identifier}`, (req, res) => {
-        console.log(req.originalUrl);
-        console.log(req.originalUrl);
+        console.log('got in', getTargetUrl(req));
         
         const submission: Submission = {
-            targetUrl: 'https://localhost:1212/trangchu',
+            targetUrl: getTargetUrl(req),
             originIPAddress: '192.168.78.24',
             timeStamps: new Date().toISOString()
         };
 
         storage.insert(submission)
             .then((newIdentifier) => {
-                console.log(newIdentifier);
-                res.render(element.viewName);
+                return storage.get(getTargetUrl(req));
+            })
+            .then(data => {
+                console.log(data);
+                console.log(data.length);
+                res.render(element.viewName, { numerOfLikes: data.length });
             });
     });
 });
+
+const getTargetUrl = (req: Request) => {
+    return req.originalUrl;
+}
 
 const port = + (prompt.acceptArgument(portArgName).extract().find(x => x.argName == portArgName)?.value ?? 1998);
 
