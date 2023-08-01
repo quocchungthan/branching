@@ -1,0 +1,53 @@
+- var currentLike = 0;
+doctype html
+html
+  head
+    title Like Button Center
+    link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css")
+    style.
+        body, html {
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .outer-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+        }
+
+        .center-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .like-button {
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        .pl-3 {
+            padding-left: 0.3rem;
+        }
+  body
+    // Full-screen flex container
+    .outer-container
+      // Centering the content vertically and horizontally
+      .center-container
+        // Your like button or any other content goes here
+        button.like-button 
+            i.fa.fa-thumbs-up
+            span.pl-3 Like !{currentLike}
+
+
