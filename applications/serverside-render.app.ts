@@ -5,6 +5,7 @@ import { IPromptFactory, PromptFactory } from '../commands/prompt.factory';
 import { IStorageClient } from './data/abstract.client';
 import { FileStorage } from './data/filestorage.client';
 import { Submission } from './models/Submission';
+import { ParsedQs } from 'qs';
 
 // Bootstrapping
 const prompt: IPromptFactory = new PromptFactory();
@@ -33,20 +34,15 @@ const widgetsConfiguration: WidgetConfiguration[] = [
 
 widgetsConfiguration.forEach(element => {
     app.get(`${widgetPrefix}/${element.identifier}`, (req, res) => {
-        console.log(getTargetUrl(req));
         storage.get(getTargetUrl(req)).then(data => {
-            console.log(data);
-            console.log(data.length);
-            res.render(element.viewName, { numerOfLikes: data.length });
+            res.render(element.viewName, { numerOfLikes: data.length, isHit: data.some(x => x.originIPAddress === getIpAdress(req)) });
         });
     });
 
     app.post(`${widgetPrefix}/${element.identifier}`, (req, res) => {
-        console.log('got in', getTargetUrl(req));
-        
         const submission: Submission = {
             targetUrl: getTargetUrl(req),
-            originIPAddress: '192.168.78.24',
+            originIPAddress: getIpAdress(req),
             timeStamps: new Date().toISOString()
         };
 
@@ -55,15 +51,18 @@ widgetsConfiguration.forEach(element => {
                 return storage.get(getTargetUrl(req));
             })
             .then(data => {
-                console.log(data);
-                console.log(data.length);
-                res.render(element.viewName, { numerOfLikes: data.length });
+                res.redirect(`${widgetPrefix}/${element.identifier}`)
             });
     });
 });
 
 const getTargetUrl = (req: Request) => {
     return req.originalUrl;
+}
+
+
+function getIpAdress(req: Request<{}, any, any, ParsedQs, Record<string, any>>): string {
+    return req.ip;
 }
 
 const port = + (prompt.acceptArgument(portArgName).extract().find(x => x.argName == portArgName)?.value ?? 1998);

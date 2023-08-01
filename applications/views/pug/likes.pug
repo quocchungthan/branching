@@ -35,6 +35,10 @@ html
             cursor: pointer;
             font-size: 16px;
         }
+
+        .like-button:disabled {
+            background-color: #95a5a6;
+        }
         
         .pl-3 {
             padding-left: 0.3rem;
@@ -45,7 +49,7 @@ html
       // Centering the content vertically and horizontally
       .center-container
             form(action="/widgets/likes", method="post")
-                button.like-button(onclick="myButtonClick()") 
+                button.like-button(onclick="myButtonClick()" disabled=isHit) 
                     i.fa.fa-thumbs-up
                     span.pl-3 Like #{numerOfLikes}
 
