@@ -1,4 +1,5 @@
 import express, { Request } from 'express';
+import cors from 'cors';
 import path from 'path';
 import { WidgetConfiguration } from './models/WidgetConfiguration';
 import { IPromptFactory, PromptFactory } from '../commands/prompt.factory';
@@ -16,6 +17,7 @@ let app = express();
 
 app.set("view engine", "pug");
 app.set("views", path.join(__dirname, "views", "pug"));
+app.use(cors());
 
 // TODO: To be set up automatically since this a pluggable design
 
@@ -62,7 +64,14 @@ const getTargetUrl = (req: Request) => {
 
 
 function getIpAdress(req: Request<{}, any, any, ParsedQs, Record<string, any>>): string {
-    return req.ip;
+    console.debug(req.headers, req.ips, req.ip);
+    let fromXRI = req.headers['X-Real-IP'];
+
+    if (typeof(fromXRI) === 'object' && fromXRI) {
+        fromXRI = fromXRI[0];
+    }
+
+    return fromXRI ?? req.ips[0] ?? req.ip;
 }
 
 const port = + (prompt.acceptArgument(portArgName).extract().find(x => x.argName == portArgName)?.value ?? 1998);
